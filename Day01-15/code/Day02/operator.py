@@ -29,3 +29,7 @@ print("flag4 = ", flag4)
 print("flag5 = ", flag5)
 print(flag1 is True)
 print(flag2 is not False)
+
+# print 可以输出多个值，多个值之间以,隔开，输出的内容之间默认以空格隔开（即: sep=' '）
+print(flag1, flag2, flag3, flag4, flag5, flag1 is True, flag2 is not True, sep=',')
+# True,False,False,True,False,True,True
