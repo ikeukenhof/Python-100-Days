@@ -27,6 +27,9 @@ def main():
     # fruit3 = fruits  # 没有复制列表只创建了新的引用
     fruits3 = fruits[:]
     print(fruits3)
+    print(fruits3 == fruits)  # True
+    print(fruits3 is fruits)  # False
+    print(f'{id(fruits3)} | {id(fruits)}')  # 2062933835584 | 2062933833344
     fruits4 = fruits[-3:-1]
     print(fruits4)
     fruits5 = fruits[::-1]

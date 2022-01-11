@@ -5,6 +5,7 @@ Version: 0.1
 Author: 骆昊
 Date: 2018-03-05
 """
+from math import factorial as fac
 
 
 # 将求阶乘的功能封装成一个函数
@@ -16,3 +17,6 @@ def factorial(n):
 
 
 print(factorial(7) // factorial(3) // factorial(4))
+
+# 内置阶乘函数
+print(fac(1), fac(2), fac(3), fac(4), sep=',', end=' ')

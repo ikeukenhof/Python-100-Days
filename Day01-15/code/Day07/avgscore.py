@@ -21,5 +21,21 @@ def main():
     print('平均成绩是: %.1f分' % (total / number))
 
 
+# 感觉这样更好些，至少没有警告
+def cal_score():
+    number = int(input('请输入学生人数: '))
+    names = [] * number
+    scores = [] * number
+    for index in range(0, number):
+        names.append(str(input('请输入第%d个学生的名字: ' % (index + 1))))
+        scores.append(float(input('请输入第%d个学生的成绩: ' % (index + 1))))
+    total = 0
+    for index in range(len(names)):
+        print('%s: %.1f分' % (names[index], scores[index]))
+        total += scores[index]
+    print('平均成绩是: %.1f分' % (total / number))
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    cal_score()

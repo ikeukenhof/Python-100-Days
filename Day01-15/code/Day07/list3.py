@@ -27,10 +27,12 @@ def main():
     print(list2)
     list3 = [m + n for m in 'ABCDEFG' for n in '12345']
     print(list3)
+    print(f'类型：{type(list3)}')  # 类型：<class 'list'>
     print(len(list3))
     # 生成器(节省空间但生成下一个元素时需要花费时间)
     gen = (m + n for m in 'ABCDEFG' for n in '12345')
-    print(gen)
+    # 类型：<class 'generator'>  <generator object main.<locals>.<genexpr> at 0x000001CBE4D23F90>
+    print(f'类型：{type(gen)}  {gen}')
     for elem in gen:
         print(elem, end=' ')
     print()

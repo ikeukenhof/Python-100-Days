@@ -7,6 +7,7 @@ Date: 2018-03-05
 """
 
 
+# 公约数
 def gcd(x, y):
     if x > y:
         (x, y) = (y, x)
@@ -16,6 +17,7 @@ def gcd(x, y):
     return 1
 
 
+# 公倍数
 def lcm(x, y):
     return x * y // gcd(x, y)
 

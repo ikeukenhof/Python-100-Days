@@ -36,6 +36,7 @@ print(f2())
 
 
 # 关键字参数
+# print(''.format(**{……}))
 def f3(**kw):
     if 'name' in kw:
         print('欢迎你%s!' % kw['name'])
@@ -50,3 +51,4 @@ f3(**param)
 f3(name='骆昊', age=38, tel='13866778899')
 f3(user='骆昊', age=38, tel='13866778899')
 f3(user='骆昊', age=38, mobile='13866778899')
+print("{name:_^6s}的年龄是{age:_^6d}。".format(**{'name': '哗哗', 'age': 28}))

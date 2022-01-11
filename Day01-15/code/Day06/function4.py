@@ -22,19 +22,23 @@ import os
 seconds = time.time()
 print(seconds)
 localtime = time.localtime(seconds)
+print(type(localtime))
 print(localtime)
 print(localtime.tm_year)
 print(localtime.tm_mon)
 print(localtime.tm_mday)
 asctime = time.asctime(localtime)
 print(asctime)
+# strptime： p表示parse，表示分析的意思，所以strptime是给定一个时间字符串和分析模式，返回一个时间对象。
+# strftime： f表示format，表示格式化，和strptime正好相反，要求给一个时间对象和输出格式，返回一个时间字符串
 strtime = time.strftime('%Y-%m-%d %H:%M:%S', localtime)
 print(strtime)
 mydate = time.strptime('2018-1-1', '%Y-%m-%d')
 print(mydate)
 
-shutil.copy('/Users/Hao/hello.py', '/Users/Hao/Desktop/first.py')
-os.system('ls -l')
-os.chdir('/Users/Hao')
+
+shutil.copy('C:/Users/Administrator/Desktop/wordcloud.py', 'C:/Users/Administrator/Desktop/wordcloud1.py')
+os.system('ls -l')  # 乱码是因为系统返回的是GBK，而pycharm控制台使用的是UTF-8
+os.chdir('C:/Users/Administrator/Desktop/')
 os.system('ls -l')
 os.mkdir('test')
