@@ -44,58 +44,94 @@ df_new:
 """
 
 
-def read_excel(path='测试.xlsx', sheet_name="Sheet1"):
+def get_header_list_dict(date_frame, headers):
+    """
+    获取字典, key<header> : value:<column_list>
+    """
+    return {header: date_frame[header] for header in headers}
+
+
+def structure_data_frame(headers, column_list_dict, index, target_column, target_column_value):
+    dic = {header: str(column_list_dict[header][index]) for _, header in enumerate(headers)}
+    dic[target_column] = str(target_column_value)
+    return DataFrame(dic, index=range(0, 1))
+
+
+def read_excel(path='测试.xlsx', sheet_name="Sheet1", target_column="商家编码"):
     if sheet_name is None:
         sheet_name = 'Sheet1'
     df_dict = pd.read_excel(path, sheet_name)
     df = DataFrame(df_dict, index=range(len(df_dict)))
 
-    businesses = df['商家id']
-    names = df['姓名']
-    ages = df['年龄']
+    # 获取标题
     headers = df.head(0).columns  # Index(['姓名', '年龄', '商家id', 'Unnamed: 3'], dtype='object')
 
-    length = len(list(businesses.items()))  # 数据行长度
+    # 获取key-标题, value-列值列表
+    column_list_dict = get_header_list_dict(df, headers)
+    # 获取目标列
+    target_list = column_list_dict.get(target_column)
+    if target_list is None:
+        raise ValueError(f'目标列【{target_column}】不存在！')
+
+    # print(f'目标列：{target_column}')
+    target_series = df[target_column]
+
+    length = len(list(target_series.items()))  # 数据行长度
     index = 0  # 原始数据下标
     insert_index = 0  # 插入行下标
 
-    for item in businesses.items():
+    for item in target_series.items():
         insert_index += 1
         # print(f'index: {index}, length: {length} , insert_index: {insert_index}')
         if index >= length:
             break
-        raw_code = item[1]
+        raw_code = str(item[1]).strip()
 
-        if raw_code.find('+') != -1:
+        if raw_code is not None and raw_code.find('+') != -1:
             split_tuple = raw_code.split('+')  # 需要拆解的列
-            df.loc[insert_index - 1, '商家id'] = split_tuple[0]  # 修改原始行
+            for header in headers:
+                if target_column != header:
+                    df.loc[insert_index - 1, header] = str(df.loc[insert_index - 1, header])
+            df.loc[insert_index - 1, target_column] = str(split_tuple[0])  # 修改原始行
 
             # 新增行
-            df_add1 = DataFrame(
-                {headers[0]: [names[index]], headers[1]: [ages[index]], headers[2]: [split_tuple[1]]},
-                index=range(0, 1))
+            df_add1 = structure_data_frame(headers, column_list_dict, index, target_column, split_tuple[1])
             df = insert(df, insert_index, df_add1)
-
-            df_add2 = DataFrame(
-                {headers[0]: [names[index]], headers[1]: [ages[index]], headers[2]: [split_tuple[2]]},
-                index=range(0, 1))
             insert_index += 1
-            df = insert(df, insert_index, df_add2)
 
-            index += 1
-            insert_index += 1
+            if len(split_tuple) > 2:
+                for i in range(2, len(split_tuple)):
+                    # 新增行2
+                    df_add2 = structure_data_frame(headers, column_list_dict, index, target_column, split_tuple[i])
+                    df = insert(df, insert_index, df_add2)
+                insert_index += 1
+
+        # 需转换为字符串类型，避免科学计数法的影响
+        elif raw_code is not None:
+            for header in headers:
+                if target_column != header:
+                    df.loc[insert_index - 1, header] = str(df.loc[insert_index - 1, header])
+            df.loc[insert_index - 1, target_column] = str(raw_code)  # 修改原始行
+
+        index += 1
     return df
 
 
 if __name__ == '__main__':
     path = ''
     while path is None or path == '':
-        path = str(input("请输入excel的路径及名称[如：C:/Users/Administrator/Desktop/测试.xlsx]:"))
+        path = str(input("请输入【excel路径及名称】[如：C:/Users/Administrator/Desktop/测试.xlsx]:"))
     if path.find('/') != -1:
         path = path.replace("/", "\\")
 
-    st_name = str(input("请输入Sheet名称[如：Sheet1（默认）]:"))
-    if st_name == '':
-        st_name = None
-    data = read_excel(path, st_name)
-    DataFrame(data).to_excel('update.xlsx', sheet_name='Sheet1', index=False, header=True)
+    st_name = str(input("请输入【Sheet】名称[如：Sheet1（默认）]:"))
+    if st_name == '' or st_name is None:
+        st_name = "Sheet1"
+
+    target_col = str(input("请输入【拆解列名称】[如：商家编码（默认）]:"))
+    if target_col == '' or target_col is None:
+        target_col = "商家编码"
+
+    data = read_excel(path, st_name, target_col)
+    # print(data)
+    DataFrame(data).to_excel('修改后.xlsx', sheet_name='Sheet1', index=False, header=True)
