@@ -27,10 +27,10 @@ def main():
     fruits.insert(0, 'banana')
     print(fruits)
     # 删除元素
-    del fruits[1]
-    fruits.pop()
-    fruits.pop(0)
-    fruits.remove('apple')
+    del fruits[1]  # ['banana', 'apple', 'strawberry', 'waxberry', 'pitaya']
+    fruits.pop()  # ['banana', 'apple', 'strawberry', 'waxberry']
+    fruits.pop(0)  # ['apple', 'strawberry', 'waxberry']
+    fruits.remove('apple')  # ['strawberry', 'waxberry']
     print(fruits)
 
 
